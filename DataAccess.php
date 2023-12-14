@@ -60,16 +60,30 @@ class DataAccess
     }
 
 
-    /**
-     * @throws Exception
-     */
-    public function ExecuteSql($sql): int
+    //function to save update delete using EXECUTE method | WITH PARAMETERS
+    function ExecuteCommand($sql, $params=null): int
     {
-        try {
-            $conn = $this->getConn();
-            return $conn->exec($sql);
+        try{
+            $conn = $this->GetConn();
+            //$conn = (new DataAccess())->GetConnection();
+
+            /* handle parameters */
+            $values = is_array($params)? $params : ( (is_null($params))? array() : array($params) );
+            //prepare and execute
+            $stmt = $conn->prepare($sql); //strtolower($sql)
+            $stmt->execute($values);
+            $count = $stmt->rowCount();
+
+            //free objects
+            $stmt->closeCursor();
+            $conn = null;
+
+            return $count;
+
         } catch (Exception $ex) {
-            throw ($ex);
+            throw $ex;
         }
     }
+
+
 }

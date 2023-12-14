@@ -1,5 +1,8 @@
 <?php
 require_once 'DataAccess.php';
+require_once './helpers.php';
+
+
 
 class AuthController
 {
@@ -14,12 +17,49 @@ class AuthController
     public function register(){
         try
         {
+
+            print("Wild horses");
+
             $da = new DataAccess();
+            $helpers = new Helpers();
+
+            $firstname = $_POST['firstname']??"";
+            $lastname = $_POST['surname']??"";
+            $dateofbirth =$_POST['dob'];
+            $cellno = $_POST['cellno'];
+            $physicaladdress = $_POST['address'];
+            $emailaddress = $_POST['email'];
+            $password =  $_REQUEST['password'];
+            $cryptpassword = password_hash($password, PASSWORD_DEFAULT); // encrypt password
+            $gender = $_POST['gender'];
+            $country=$_POST['country'];
+            $dateregistered=$helpers->GetCurrentDate();
+
+            if( $firstname=="" || $lastname=="" || $gender=="" || $physicaladdress=="" ){
+                throw new Exception("Please enter missing data values !!");
+            }
 
             $sql = "
-                INSERT INTO Customer (cusFirstname, cusLastName, cusDateOfBirth,cusCellNo, cusPhysicalAddress,cusEmailAddress, cusPassword, gender)
-                VALUES (:firstname, :lastname, :dateofbirth, :telephonenumber, :physicaladdress, :emailaddress, :password, :gender)
+                INSERT INTO Customer (cusFirstname, cusLastName, cusDateOfBirth,cusCellNo, cusPhysicalAddress,cusEmailAddress, cusPassword, cusGender,countryId,cusDateRegistered)
+                VALUES (:firstname, :lastname, :dateofbirth, :cellno, :physicaladdress, :emailaddress, :password, :gender,:country,:dateregistered)
                     ";
+
+            // Prepare and execute the query
+            $arrParams = array(":firstname"=>$firstname,":lastname"=>$lastname,":dateofbirth"=>$dateofbirth,":cellno"=>$cellno,":physicaladdress"=>$physicaladdress,
+            ":emailaddress"=>$emailaddress,":password"=>$password,":gender"=>$gender,":country"=>$country,":dateregistered"=>$dateregistered);
+
+            $count = $da->ExecuteCommand($sql, $arrParams);
+
+            if ($count>0)
+            {
+                print("Customer registered successfully You will be redirected to a log in page now !!");
+                header('Location: views/loginView.php');
+            }else
+            {
+                throw new ErrorException("Customer registration failed !!");
+            }
+
+
 
         }
         catch(Exception $ex)

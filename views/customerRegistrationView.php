@@ -1,7 +1,8 @@
 <?php
 
 //include external files needed
-include_once './DataAccess.php';
+include_once '../DataAccess.php';
+include_once '../helpers.php';
 $da = new DataAccess();
 $helpers = new Helpers();
 
@@ -15,7 +16,7 @@ $helpers = new Helpers();
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
 </head>
 
-<form name="customers" id="customers" method="POST" >
+<form name="customers" id="customers" method="POST"  action="../router.php?route=register" >
     <fieldset id="fldsetcontrols" name="fldsetcontrols">
 
         <label for="firstname">Firstname :</label>
@@ -28,10 +29,9 @@ $helpers = new Helpers();
 
         <label for="gender">Gender :</label>
         <select name="gender" id="gender" >
-            <?php
-            $arrdata = $da->GetGenderData();
-            $da->LoadDropDown($arrdata);
-            ?>
+            <option value="">Select</option>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
         </select>
         <br/>
 
@@ -47,31 +47,29 @@ $helpers = new Helpers();
         <input type="text" name="cellno" id="cellno" required="true" placeholder="Cell Number"/>
         <br/>
 
-        <label for="username">Username :</label>
-        <input type="text" name="username" id="username" required="true" placeholder="Username"/>
+        <label for="Email">Email :</label>
+        <input type="email" name="email" id="email" required="true" placeholder="email"/>
         <br/>
 
         <label for="password">Password :</label>
         <input type="password" name="password" id="password" required="true" placeholder="Password"/>
         <br/>
 
-        <label for="countryid">Country :</label>
-        <select name="countryid" id="countryid" >
+        <label for="country">Country :</label>
+        <select name="country" id="countryid" >
             <?php
-            $arrdata = $da->GetDataSQL("select * from class_countries");
-            $da->LoadDropDown($arrdata, 0, 1);
+            try{
+            $arrData = $da->GetDataSQL("select * from Country");
+            $helpers->LoadDropDown($arrData, 0, 1);
+            }catch(Exception $ex){
+                print($ex->getMessage());
+            }
             ?>
         </select>
         <br/>
 
-        <label for="dateregistered">Date Registered :</label>
-        <input type="date" name="dateregistered" id="dateregistered" />
-        <br/>
-
         <hr>
         <input type="submit" name="btnregister" id="btnregister" value="Register"/>
-        <input type="submit" name="btnupdate" id="btnupdate" value="Update"/>
-        <input type="submit" name="btndelete" id="btndelete" value="Delete"/>
         <input type="reset" name="btnclear" id="btnclear" value="Clear"/>
 
         <br/>
