@@ -7,11 +7,10 @@ $data = new DataAccess();
 class StockController
 {
 
-    public function GetMovementDetails(): void
+    public function PrepMovementDetails(): void
     {
         try
         {
-            $helpers = new Helpers();
 
             $key = array_keys($_POST);
             $key = $key[0];

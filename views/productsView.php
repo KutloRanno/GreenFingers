@@ -6,26 +6,28 @@ include_once '../helpers.php';
 $helpers = new Helpers();
 $da = new DataAccess();
 
+var_dump($_SESSION);var_dump($_REQUEST);
+
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Stock Warehouse Report</title>
+    <title>Products</title>
     <meta charset="utf-8"/>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
 </head>
 
-<form name="StockWarehouseReport" id="StockWarehouseReport" method="POST" action="../router.php?route=prepmovementdetails" >
+<form name="Products" id="Products" method="POST" action="../router.php?route=preppurchase" >
     <fieldset id="fldsetcontrols" name="fldsetcontrols">
 
-        <h2>Stock Warehouse Report</h2>
+        <h2>View Our Catalog</h2>
 
         <?php
 
         try {
 
-            $sql = "select stockId as 'Stock ID', stockTypeName as 'Stock Type',prodName as 'Stock Name', prodDescription as 'Description', Quantity ,prodCost as 'Cost per unit (P)', storeName as 'Store Name',CONCAT('<input type=''submit'' name=''btnmovestock|',Quantity,'_',stockId, '_', storeId,''' value=''MOVE STOCK''>') as 'Select'
+            $sql = "select prodName as 'Product Name', StockTypeName as 'Product Type',prodName as 'Product Name', prodDescription as 'Description', Quantity as 'Available' ,prodCost as 'Cost per unit (P)', storeName as 'Store Name',CONCAT('<input type=''submit'' name=''btnbuyproduct|' ,Quantity,'_',stockId, '_', storeId,''' value=''Buy product''>') as 'Select'
                 from StockLevelByStore_view;";
             $arrData = $da->GetData($sql);
 
