@@ -1,7 +1,0 @@
-{
-  "require":
-  {
-    "": "<default>",
-    "ext-pdo": "*"
-  }
-}
